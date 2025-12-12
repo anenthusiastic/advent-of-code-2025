@@ -5,7 +5,7 @@ import util.FileReaderUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class fatihgurkan {
+public class Question2 {
 
     public long part1() {
         long sum = 0;

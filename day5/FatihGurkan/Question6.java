@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class fatihgurkan {
+public class Question6 {
 
     public int part1() {
         List<Range> ranges = new ArrayList<>();
