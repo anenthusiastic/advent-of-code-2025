@@ -1,14 +1,15 @@
 package solutions;
 
-import util.AoCUtil;
+import util.FileReaderUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class fatihgurkan {
 
     public long part1() {
         long sum = 0;
-        String line = AoCUtil.getLine("input2.txt");
+        String line = FileReaderUtil.getLines("input2.txt")[0];
         String[] ranges = line.split(",");
         for (String range : ranges) {
             String[] rangeBounds = range.split("-");
@@ -68,36 +69,79 @@ public class fatihgurkan {
             }
         }
         return sum;
-}
+    }
 
-public long part2() {
-    long sum = 0;
-    String line = AoCUtil.getLine("input2.txt");
-    String[] ranges = line.split(",");
-    for (String range : ranges) {
-        String[] rangeBounds = range.split("-");
-        long min = Long.parseLong(rangeBounds[0]);
-        long max = Long.parseLong(rangeBounds[1]);
-        for (long i = min; i <= max; i++) {
-            String numberStr = String.valueOf(i);
-            if (AoCUtil.isAllDigitsEqual(numberStr)) {
-                sum += i;
-                continue;
-            }
-            int digitCount = numberStr.length();
-            if (AoCUtil.isPrime(digitCount))
-                continue;
-
-            List<Integer> divisors = AoCUtil.findDivisors(digitCount);
-            for (Integer divisor : divisors) {
-                if (AoCUtil.existPattern(numberStr, divisor)) {
+    public long part2() {
+        long sum = 0;
+        String line = FileReaderUtil.getLines("input2.txt")[0];
+        String[] ranges = line.split(",");
+        for (String range : ranges) {
+            String[] rangeBounds = range.split("-");
+            long min = Long.parseLong(rangeBounds[0]);
+            long max = Long.parseLong(rangeBounds[1]);
+            for (long i = min; i <= max; i++) {
+                String numberStr = String.valueOf(i);
+                if (isAllDigitsEqual(numberStr)) {
                     sum += i;
-                    break;
+                    continue;
+                }
+                int digitCount = numberStr.length();
+                if (isPrime(digitCount))
+                    continue;
+
+                List<Integer> divisors = findDivisors(digitCount);
+                for (Integer divisor : divisors) {
+                    if (existPattern(numberStr, divisor)) {
+                        sum += i;
+                        break;
+                    }
                 }
             }
         }
+        return sum;
     }
-    return sum;
-}
+
+    public boolean isPrime(int digitCount) {
+        for (int i = 2; i <= (int) Math.sqrt(digitCount); i++) {
+            if (digitCount % i == 0) return false;
+        }
+        return true;
+    }
+
+    public boolean existPattern(String numberStr, Integer divisor) {
+        String pattern = numberStr.substring(0, divisor);
+        int startIndex = divisor;
+        int endIndex = startIndex + divisor;
+        while (endIndex <= numberStr.length()) {
+            if (!numberStr.substring(startIndex, endIndex).equals(pattern))
+                return false;
+            startIndex = endIndex;
+            endIndex = startIndex + divisor;
+        }
+        return true;
+
+    }
+
+    public List<Integer> findDivisors(int digitCount) {
+        List<Integer> divisors = new ArrayList<>();
+
+        for (int i = 2; i <= digitCount / 2; i++) {
+            if (digitCount % i == 0) {
+                divisors.add(i);
+            }
+        }
+        return divisors;
+    }
+
+    public boolean isAllDigitsEqual(String numberStr) {
+        int numberLen = numberStr.length();
+        if (numberLen < 2) return false;
+        char first = numberStr.charAt(0);
+        for (int i = 1; i < numberLen; i++) {
+            if (numberStr.charAt(i) != first)
+                return false;
+        }
+        return true;
+    }
 
 }
